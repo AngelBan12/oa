@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Estelar para Adri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #0a0e29, #1a1f4a, #2d3560);
+            color: white;
+            font-family: 'Cursive', 'Poppins', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .cosmos {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 20;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .envelope-container {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            margin-bottom: 30px;
+            cursor: pointer;
+            z-index: 30;
+            transition: transform 0.5s ease;
+        }
+        
+        .envelope-container:hover {
+            transform: scale(1.05);
+        }
+        
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: all 0.8s ease-in-out;
+            transform-style: preserve-3d;
+        }
+        
+        .envelope.open {
+            transform: translateY(-100px) scale(0.8);
+            opacity: 0.7;
+            z-index: 25;
+        }
+        
+        .envelope-closed {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #d4af37, #f5e9c6);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .envelope-closed::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 100%);
+            z-index: 1;
+        }
+        
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: #c19b31;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top;
+            transition: transform 1s ease-in-out;
+            z-index: 2;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .seal {
+            position: absolute;
+            top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #ffd700, #ffcc00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b7500;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 4;
+            animation: sealGlow 2s infinite alternate;
+        }
+        
+        .letter-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease-in-out;
+        }
+        
+        .letter-container.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .letter {
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            background: linear-gradient(to bottom, #f9f3e5, #f5e9c6);
+            border-radius: 15px;
+            padding: 30px;
+            color: #333;
+            font-family: 'Dancing Script', cursive;
+            overflow-y: auto;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            transform: scale(0.8) translateY(50px);
+            opacity: 0;
+            transition: all 0.8s ease-in-out;
+            position: relative;
+        }
+        
+        .letter-container.open .letter {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        
+        .grass-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            overflow: hidden;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            z-index: 1;
+        }
+        
+        .grass {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to bottom, #2e8b57, #3cb371, #2e8b57);
+            z-index: 1;
+        }
+        
+        .grass::before {
+            content: '';
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: linear-gradient(to bottom, transparent, rgba(46, 139, 87, 0.7));
+            z-index: 1;
+        }
+        
+        .tulip {
+            position: absolute;
+            z-index: 2;
+            bottom: 30px;
+        }
+        
+        .tulip-stem {
+            position: absolute;
+            width: 3px;
+            height: 25px;
+            background: linear-gradient(to bottom, #2e8b57, #228B22);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .tulip-flower {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 25px;
+            background: linear-gradient(to bottom, #FFD700, #FFEC8B, #FFD700);
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        
+        .tulip-flower::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 10px;
+            background: linear-gradient(to bottom, #32CD32, #228B22);
+            border-radius: 50% 50% 0 0;
+            z-index: 3;
+        }
+        
+        .tulip-leaf {
+            position: absolute;
+            width: 10px;
+            height: 12px;
+            background: linear-gradient(to bottom, #32CD32, #228B22);
+            border-radius: 50% 0 50% 50%;
+            bottom: 10px;
+            z-index: 1;
+        }
+        
+        .tulip:nth-child(1) { left: 10%; }
+        .tulip:nth-child(2) { left: 25%; }
+        .tulip:nth-child(3) { left: 40%; }
+        .tulip:nth-child(4) { left: 55%; }
+        .tulip:nth-child(5) { left: 70%; }
+        .tulip:nth-child(6) { left: 85%; }
+        
+        .tulip:nth-child(1) .tulip-leaf { left: -8px; transform: rotate(-30deg); }
+        .tulip:nth-child(2) .tulip-leaf { right: -8px; transform: rotate(30deg) scaleX(-1); }
+        .tulip:nth-child(3) .tulip-leaf { left: -8px; transform: rotate(-30deg); }
+        .tulip:nth-child(4) .tulip-leaf { right: -8px; transform: rotate(30deg) scaleX(-1); }
+        .tulip:nth-child(5) .tulip-leaf { left: -8px; transform: rotate(-30deg); }
+        .tulip:nth-child(6) .tulip-leaf { right: -8px; transform: rotate(30deg) scaleX(-1); }
+        
+        .tulip:nth-child(odd) .tulip-flower {
+            transform: translateX(-50%) rotate(-5deg);
+            height: 28px;
+        }
+        
+        .tulip:nth-child(even) .tulip-flower {
+            transform: translateX(-50%) rotate(5deg);
+            width: 22px;
+        }
+        
+        .letter h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #8e24aa;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-top: 60px;
+        }
+        
+        .letter p {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ffcc00;
+            color: #8b7500;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .close-btn:hover {
+            transform: scale(1.1);
+            background: #ffd700;
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-top: 20px;
+            background: rgba(4, 7, 26, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+            animation: pulse 2s infinite;
+            z-index: 30;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite ease-in-out;
+        }
+        
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 1) 30%,
+                rgba(255, 255, 255, 1) 70%,
+                rgba(255, 255, 255, 0) 100%);
+            animation: shoot 3s infinite ease-in;
+            opacity: 0;
+            filter: blur(1px);
+        }
+        
+        .shooting-star.colorful {
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 0, 0.8) 30%,
+                rgba(255, 200, 0, 0.8) 70%,
+                rgba(255, 255, 255, 0) 100%);
+        }
+        
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.2;
+            animation: nebulaPulse 15s infinite alternate;
+        }
+        
+        .external-flowers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 35;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        .external-flowers.visible {
+            opacity: 1;
+        }
+        
+        .external-tulip {
+            position: absolute;
+            opacity: 0;
+            transform: scale(0) rotate(180deg);
+            animation: growFlower 2s forwards;
+        }
+        
+        .external-tulip .external-tulip-stem {
+            position: absolute;
+            width: 4px;
+            height: 0;
+            background: linear-gradient(to bottom, #2e8b57, #228B22);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: growStem 1.5s forwards;
+            animation-delay: 0.5s;
+        }
+        
+        .external-tulip .external-tulip-flower {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            background: linear-gradient(to bottom, #FFD700, #FFEC8B, #FFD700);
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+            animation: growFlowerTop 1.5s forwards;
+            animation-delay: 1.5s;
+        }
+        
+        .external-tulip .external-tulip-flower::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            background: linear-gradient(to bottom, #32CD32, #228B22);
+            border-radius: 50% 50% 0 0;
+            z-index: 3;
+            animation: growFlowerDetail 1s forwards;
+            animation-delay: 2.5s;
+        }
+        
+        .external-tulip .external-tulip-leaf {
+            position: absolute;
+            width: 0;
+            height: 0;
+            background: linear-gradient(to bottom, #32CD32, #228B22);
+            border-radius: 50% 0 50% 50%;
+            bottom: 10px;
+            z-index: 1;
+            animation: growLeaf 1s forwards;
+            animation-delay: 2s;
+        }
+        
+        .external-tulip:nth-child(1) { left: 15%; top: 15%; bottom: auto; animation-delay: 0.2s; }
+        .external-tulip:nth-child(2) { left: 25%; top: 10%; bottom: auto; animation-delay: 0.4s; }
+        .external-tulip:nth-child(3) { left: 35%; top: 12%; bottom: auto; animation-delay: 0.6s; }
+        .external-tulip:nth-child(4) { left: 75%; top: 15%; bottom: auto; animation-delay: 0.8s; }
+        .external-tulip:nth-child(5) { left: 85%; top: 10%; bottom: auto; animation-delay: 1s; }
+        .external-tulip:nth-child(6) { left: 65%; top: 12%; bottom: auto; animation-delay: 1.2s; }
+        .external-tulip:nth-child(7) { left: 10%; top: 25%; bottom: auto; animation-delay: 1.4s; }
+        .external-tulip:nth-child(8) { left: 90%; top: 25%; bottom: auto; animation-delay: 1.6s; }
+        .external-tulip:nth-child(9) { left: 20%; top: 30%; bottom: auto; animation-delay: 1.8s; }
+        .external-tulip:nth-child(10) { left: 80%; top: 30%; bottom: auto; animation-delay: 2s; }
+        
+        .external-tulip:nth-child(odd) .external-tulip-leaf { left: -10px; transform: rotate(-30deg); }
+        .external-tulip:nth-child(even) .external-tulip-leaf { right: -10px; transform: rotate(30deg) scaleX(-1); }
+        
+        .external-tulip:nth-child(odd) .external-tulip-flower {
+            transform: translateX(-50%) rotate(-5deg);
+        }
+        
+        .external-tulip:nth-child(even) .external-tulip-flower {
+            transform: translateX(-50%) rotate(5deg);
+        }
+        
+        @keyframes growFlower {
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+        }
+        
+        @keyframes growStem {
+            to {
+                height: 40px;
+            }
+        }
+        
+        @keyframes growFlowerTop {
+            to {
+                width: 25px;
+                height: 30px;
+            }
+        }
+        
+        @keyframes growFlowerDetail {
+            to {
+                width: 10px;
+                height: 12px;
+            }
+        }
+        
+        @keyframes growLeaf {
+            to {
+                width: 12px;
+                height: 14px;
+            }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { 
+                opacity: 0.3; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.1);
+            }
+        }
+        
+        @keyframes shoot {
+            0% {
+                opacity: 0;
+                transform: translateX(0) translateY(0) rotate(0deg);
+            }
+            1% {
+                opacity: 1;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(100vw) translateY(30vh) rotate(30deg);
+            }
+        }
+        
+        @keyframes nebulaPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.15;
+            }
+            100% {
+                transform: scale(1.4);
+                opacity: 0.25;
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 255, 0, 0.35);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 10px rgba(255, 255, 0, 1);
+            }
+        }
+        
+        @keyframes sealGlow {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 15px rgba(255, 215, 0, 1);
+            }
+        }
+        
+        @keyframes tulipSway {
+            0%, 100% { transform: translateX(-50%) rotate(-2deg); }
+            50% { transform: translateX(-50%) rotate(2deg); }
+        }
+        
+        .tulip-flower {
+            animation: tulipSway 5s infinite ease-in-out;
+        }
+        
+        .tulip:nth-child(even) .tulip-flower {
+            animation-delay: 0.5s;
+        }
+        
+        .yellow-highlight {
+            background-color: #fff8cc;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+        
+        @media (max-width: 768px) {
+            .envelope-container {
+                width: 280px;
+                height: 190px;
+            }
+            
+            .envelope-flap {
+                height: 85px;
+            }
+            
+            .seal {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                top: 75px;
+            }
+            
+            .instructions {
+                max-width: 90%;
+                font-size: 14px;
+            }
+            
+            .letter {
+                padding: 20px;
+            }
+            
+            .letter h2 {
+                font-size: 24px;
+                margin-top: 55px;
+            }
+            
+            .letter p {
+                font-size: 18px;
+            }
+            
+            .grass-border {
+                height: 50px;
+            }
+            
+            .grass {
+                height: 25px;
+            }
+            
+            .tulip-stem {
+                height: 20px;
+            }
+            
+            .tulip-flower {
+                bottom: 20px;
+                width: 18px;
+                height: 22px;
+            }
+            
+            .external-tulip .external-tulip-stem {
+                width: 3px;
+            }
+            
+            .external-tulip:nth-child(1) { left: 10%; top: 15%; }
+            .external-tulip:nth-child(2) { left: 25%; top: 10%; }
+            .external-tulip:nth-child(3) { left: 40%; top: 12%; }
+            .external-tulip:nth-child(4) { left: 70%; top: 15%; }
+            .external-tulip:nth-child(5) { left: 85%; top: 10%; }
+            .external-tulip:nth-child(6) { left: 55%; top: 12%; }
+            .external-tulip:nth-child(7) { left: 5%; top: 25%; }
+            .external-tulip:nth-child(8) { left: 95%; top: 25%; }
+            .external-tulip:nth-child(9) { left: 15%; top: 30%; }
+            .external-tulip:nth-child(10) { left: 80%; top: 30%; }
+        }
+        
+        @media (max-width: 480px) {
+            .envelope-container {
+                width: 240px;
+                height: 170px;
+            }
+            
+            .envelope-flap {
+                height: 75px;
+            }
+            
+            .seal {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+                top: 65px;
+            }
+            
+            .letter {
+                padding: 15px;
+                width: 95%;
+            }
+            
+            .letter h2 {
+                font-size: 22px;
+                margin-top: 50px;
+            }
+            
+            .letter p {
+                font-size: 16px;
+            }
+            
+            .grass-border {
+                height: 45px;
+            }
+            
+            .grass {
+                height: 22px;
+            }
+            
+            .tulip-stem {
+                height: 18px;
+                width: 2.5px;
+            }
+            
+            .tulip-flower {
+                bottom: 18px;
+                width: 16px;
+                height: 20px;
+            }
+            
+            .tulip-flower::before {
+                width: 6px;
+                height: 8px;
+            }
+            
+            .tulip-leaf {
+                width: 8px;
+                height: 10px;
+            }
+            
+            .external-tulip .external-tulip-stem {
+                width: 2.5px;
+            }
+            
+            .external-tulip .external-tulip-flower {
+                width: 0;
+                height: 0;
+            }
+            
+            @keyframes growFlowerTop {
+                to {
+                    width: 20px;
+                    height: 25px;
+                }
+            }
+            
+            @keyframes growStem {
+                to {
+                    height: 30px;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmos" id="cosmos"></div>
+    
+    <div class="container">
+        <div class="envelope-container" id="envelope-container">
+            <div class="envelope" id="envelope">
+                <div class="envelope-closed">
+                    <div class="envelope-flap"></div>
+                    <div class="seal">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <p>Haz clic en el sobre para abrirlo y descubrir el mensaje secreto</p>
+        </div>
+    </div>
+    
+    <div class="external-flowers" id="external-flowers">
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+        <div class="external-tulip">
+            <div class="external-tulip-stem"></div>
+            <div class="external-tulip-flower"></div>
+            <div class="external-tulip-leaf"></div>
+        </div>
+    </div>
+    
+    <div class="letter-container" id="letter-container">
+        <div class="letter">
+            <div class="grass-border">
+                <div class="grass"></div>
+                <div class="tulip">
+                    <div class="tulip-stem"></div>
+                    <div class="tulip-flower"></div>
+                    <div class="tulip-leaf"></div>
+                </div>
+                <div class="tulip">
+                    <div class="tulip-stem"></div>
+                    <div class="tulip-flower"></div>
+                    <div class="tulip-leaf"></div>
+                </div>
+                <div class="tulip">
+                    <div class="tulip-stem"></div>
+                    <div class="tulip-flower"></div>
+                    <div class="tulip-leaf"></div>
+                </div>
+                <div class="tulip">
+                    <div class="tulip-stem"></div>
+                    <div class="tulip-flower"></div>
+                    <div class="tulip-leaf"></div>
+                </div>
+                <div class="tulip">
+                    <div class="tulip-stem"></div>
+                    <div class="tulip-flower"></div>
+                    <div class="tulip-leaf"></div>
+                </div>
+                <div class="tulip">
+                    <div class="tulip-stem"></div>
+                    <div class="tulip-flower"></div>
+                    <div class="tulip-leaf"></div>
+                </div>
+            </div>
+            <div class="close-btn" id="close-btn">
+                <i class="fas fa-times"></i>
+            </div>
+            <h2>Para Ti, Adri</h2>
+            <p>Amigue Adri,</p>
+            <p>Las estrellas en el cielo brillan con especial intensidad esta noche, recordándome lo valiosa que es nuestra amistad. Cada estrella fugaz que cruza el firmamento me trae un recuerdo de los momentos que hemos compartido jugando, insultando, etc. Tan brillantes como <span class="yellow-highlight">pétalos de caléndula</span> bajo la luz de la luna.</p>
+            <p>En este vasto universo, nuestros caminos se cruzaron por una razón, y estoy agradecido por cada risa, cada conversación y cada apoyo que hemos intercambiado. Eres para mí como un <span class="yellow-highlight">ramo de rosas amarillas</span>: símbolo de amistad, alegría y cariño sincero.</p>
+            <p>Que este mensaje te encuentre bien, lleno de alegría y rodeado de bendiciones. Recuerda que, sin importar la distancia, siempre habrá una estrella brillando para ti y un <span class="yellow-highlight">jardín de flores amarillas</span> esperando tu regreso.</p>
+            <p>Con todo mi cariño,</p>
+            <p>Tu amigo que te valora mucho Angel 🌻</p>
+            <img src="https://www.doralroses.miami/cdn/shop/files/Rosas-Amarillas.png?v=1758275781" alt="Rosas Amarillas" style="width:100%; border-radius:10px; margin-top:15px; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cosmos = document.getElementById('cosmos');
+            const envelope = document.getElementById('envelope');
+            const envelopeContainer = document.getElementById('envelope-container');
+            const letterContainer = document.getElementById('letter-container');
+            const closeBtn = document.getElementById('close-btn');
+            const externalFlowers = document.getElementById('external-flowers');
+            const starCount = 200;
+            const shootingStarFrequency = 1000;
+            
+            // Crear estrellas estáticas
+            for (let i = 0; i < starCount; i++) {
+                createStaticStar();
+            }
+            
+            // Crear nebulosas
+            createNebula(100, 100, 200, 'rgba(70, 130, 255, 0.3)', 15);
+            createNebula(window.innerWidth - 250, window.innerHeight - 200, 250, 'rgba(180, 80, 255, 0.2)', 20);
+            createNebula(window.innerWidth/2, 300, 300, 'rgba(0, 200, 255, 0.15)', 25);
+            
+            // Crear estrellas fugaces a intervalos regulares
+            setInterval(createShootingStar, shootingStarFrequency);
+            
+            // Crear estrellas fugaces coloridas con menor frecuencia
+            setInterval(() => {
+                createShootingStar(true);
+            }, shootingStarFrequency * 3);
+            
+            // Abrir el sobre y mostrar la carta
+            envelopeContainer.addEventListener('click', function() {
+                envelope.classList.add('open');
+                
+                setTimeout(function() {
+                    letterContainer.classList.add('open');
+                    // Mostrar flores exteriores con animación
+                    externalFlowers.classList.add('visible');
+                }, 800);
+            });
+            
+            // Cerrar la carta
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                letterContainer.classList.remove('open');
+                externalFlowers.classList.remove('visible');
+                
+                setTimeout(function() {
+                    envelope.classList.remove('open');
+                }, 300);
+            });
+            
+            // Cerrar la carta al hacer clic fuera de ella
+            letterContainer.addEventListener('click', function(e) {
+                if (e.target === letterContainer) {
+                    letterContainer.classList.remove('open');
+                    externalFlowers.classList.remove('visible');
+                    
+                    setTimeout(function() {
+                        envelope.classList.remove('open');
+                    }, 300);
+                }
+            });
+            
+            function createStaticStar() {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                
+                if (Math.random() > 0.8) {
+                    const colors = ['#a7c0ff', '#ffdba7', '#c2a7ff', '#a7ffec'];
+                    star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                }
+                
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                star.style.animationDuration = `${Math.random() * 3 + 3}s`;
+                
+                cosmos.appendChild(star);
+            }
+            
+            function createNebula(x, y, size, color, animationDelay) {
+                const nebula = document.createElement('div');
+                nebula.classList.add('nebula');
+                
+                nebula.style.width = `${size}px`;
+                nebula.style.height = `${size}px`;
+                nebula.style.left = `${x}px`;
+                nebula.style.top = `${y}px`;
+                nebula.style.background = color;
+                nebula.style.animationDelay = `${animationDelay}s`;
+                
+                cosmos.appendChild(nebula);
+            }
+            
+            function createShootingStar(isColorful = false) {
+                const shootingStar = document.createElement('div');
+                shootingStar.classList.add('shooting-star');
+                
+                if (isColorful) {
+                    shootingStar.classList.add('colorful');
+                }
+                
+                const length = Math.random() * 100 + 50;
+                shootingStar.style.width = `${length}px`;
+                
+                if (Math.random() > 0.5) {
+                    shootingStar.style.left = `${Math.random() * 100}vw`;
+                    shootingStar.style.top = '0';
+                    shootingStar.style.transformOrigin = 'left center';
+                } else {
+                    shootingStar.style.left = '0';
+                    shootingStar.style.top = `${Math.random() * 100}vh`;
+                    shootingStar.style.transformOrigin = 'left center';
+                }
+                
+                const angle = Math.random() * 60 - 30;
+                shootingStar.style.transform = `rotate(${angle}deg)`;
+                
+                const duration = Math.random() * 2 + 2;
+                shootingStar.style.animationDuration = `${duration}s`;
+                
+                cosmos.appendChild(shootingStar);
+                
+                setTimeout(() => {
+                    shootingStar.remove();
+                }, duration * 1000);
+            }
+            
+            if (window.innerWidth < 768) {
+                const stars = document.querySelectorAll('.star');
+                for (let i = starCount - 70; i < stars.length; i++) {
+                    if (stars[i]) stars[i].remove();
+                }
+            }
+            
+            window.addEventListener('resize', function() {
+                while (cosmos.firstChild) {
+                    cosmos.removeChild(cosmos.firstChild);
+                }
+                
+                for (let i = 0; i < starCount; i++) {
+                    createStaticStar();
+                }
+                
+                createNebula(100, 100, 200, 'rgba(70, 130, 255, 0.3)', 15);
+                createNebula(window.innerWidth - 250, window.innerHeight - 200, 250, 'rgba(180, 80, 255, 0.2)', 20);
+                createNebula(window.innerWidth/2, 300, 300, 'rgba(0, 200, 255, 0.15)', 25);
+            });
+        });
+    </script>
+</body>
+</html>
